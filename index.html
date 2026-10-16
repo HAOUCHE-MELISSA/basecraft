@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BASECRAFT – Number Base Converter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="7" fill="var(--accent)"/><text x="16" y="21" text-anchor="middle" font-family="monospace" font-size="13" font-weight="700" fill="#fff">2⁸</text></svg>
+      <div><h1>BASECRAFT</h1><p class="sub">Number Systems &amp; Base Conversion</p></div>
+    </div>
+    <div class="header-actions">
+      <button class="btn ghost" id="themeBtn" aria-label="Toggle light/dark theme" title="Toggle theme">◐</button>
+      <button class="btn ghost" id="helpBtn" aria-label="Help and about" title="Help">?</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="card" id="panel" aria-label="Converter">
+      <label for="numInput" class="lbl">Input number</label>
+      <div class="input-row">
+        <input id="numInput" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="e.g. 255, 7F, 3.14, -1010" aria-describedby="inErr digitHint">
+        <button class="btn ghost" id="clearBtn" aria-label="Clear input">✕</button>
+      </div>
+      <p class="err" id="inErr" role="alert"></p>
+      <p class="hint" id="digitHint"></p>
+
+      <div class="bases">
+        <div class="base">
+          <label for="srcSel" class="lbl">From base</label>
+          <select id="srcSel"></select>
+          <input id="srcCustom" type="number" min="2" max="36" step="1" value="3" aria-label="Custom source base (2 to 36)" hidden>
+        </div>
+        <button class="btn swap" id="swapBtn" aria-label="Swap source and target bases" title="Swap bases">⇄</button>
+        <div class="base">
+          <label for="tgtSel" class="lbl">To base</label>
+          <select id="tgtSel"></select>
+          <input id="tgtCustom" type="number" min="2" max="36" step="1" value="3" aria-label="Custom target base (2 to 36)" hidden>
+        </div>
+      </div>
+      <p class="err" id="baseErr" role="alert"></p>
+
+      <div class="actions">
+        <button class="btn primary" id="convertBtn">Convert</button>
+        <div class="prec">
+          <label for="precSel">Fraction digits</label>
+          <select id="precSel"><option>5</option><option>10</option><option selected>20</option><option>50</option></select>
+          <button class="btn ghost small" id="resetBtn" title="Restore default bases and precision">Reset settings</button>
+        </div>
+      </div>
+      <p class="hint">Higher precision lengthens repeating expansions; it does not guarantee a finite exact result.</p>
+
+      <div class="shortcuts" id="shortcuts" aria-label="Quick conversions"></div>
+    </section>
+
+    <section class="card result" id="resultCard" hidden aria-live="polite">
+      <div class="res-head">
+        <span class="ok" id="okBadge">✓ Converted</span>
+        <span class="tag" id="resBase"></span>
+        <span class="tag warn" id="approxTag" hidden>≈ truncated, not exact</span>
+        <span class="tag warn" id="staleTag" hidden>outdated</span>
+      </div>
+      <div class="res-row">
+        <output id="resultText" class="mono big"></output>
+        <button class="btn" id="copyBtn" aria-label="Copy result">Copy</button>
+      </div>
+      <p class="hint" id="signNote" hidden>Negative numbers use a minus sign, not two's complement.</p>
+      <h3 class="sm">Common bases</h3>
+      <dl class="compare" id="compare"></dl>
+      <details id="steps"><summary>How was this calculated?</summary><div id="stepsBody" class="mono steps"></div></details>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <div class="res-head"><h2>History</h2><button class="btn ghost small" id="clearHist">Clear all</button></div>
+        <ul id="history" class="history"></ul>
+      </section>
+      <section class="card">
+        <h2>Understanding Number Systems</h2>
+        <table class="ref"><thead><tr><th>System</th><th>Base</th><th>Digits</th></tr></thead><tbody>
+          <tr><td>Binary</td><td>2</td><td>0–1</td></tr><tr><td>Octal</td><td>8</td><td>0–7</td></tr>
+          <tr><td>Decimal</td><td>10</td><td>0–9</td></tr><tr><td>Hexadecimal</td><td>16</td><td>0–9, A–F</td></tr>
+          <tr><td>Custom</td><td>2–36</td><td>0–9, A–Z (per base)</td></tr></tbody></table>
+        <p>A digit's value depends on its position and the base: <span class="mono">345₁₀ = 3×10² + 4×10¹ + 5×10⁰</span></p>
+        <div class="examples" id="examples"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<dialog id="helpDlg">
+  <h2>About BASECRAFT</h2>
+  <p>Converts integers and fractions between any bases 2–36 using exact BigInt rational arithmetic. Letters A–Z are digits 10–35 (case-insensitive).</p>
+  <ul>
+    <li><kbd>Enter</kbd> convert · <kbd>Ctrl</kbd>+<kbd>Enter</kbd> convert from anywhere in the panel</li>
+    <li><kbd>Ctrl/Cmd</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd> copy result · <kbd>Esc</kbd> close dialogs</li>
+  </ul>
+  <p>Truncated fractions are marked “≈”; converting them back may differ from the original.</p>
+  <button class="btn primary" id="closeHelp">Close</button>
+</dialog>
+<script src="script.js"></script>
+</body>
+</html>
